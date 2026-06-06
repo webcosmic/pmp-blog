@@ -12,7 +12,7 @@ During a weekly status meeting, a key stakeholder casually requests a minor feat
 What is the **first** thing a Project Manager should do?
 
 A) Add it immediately to keep the stakeholder happy.
-B) Politely decline and refer to the Scope Statement.
+B) decline and refer to the Scope Statement.
 C) Evaluate the impact on the project's triple constraints.
 D) Update the Project Management Plan.
 
