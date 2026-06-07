@@ -1,5 +1,4 @@
 ---
----
 layout: ../../layouts/PmpQuestionLayout.astro
 title: "Situational PMP Question: Managing Emerging Regulatory Stakeholder Power Shifts"
 pubDate: 2026-06-07
@@ -8,7 +7,6 @@ category: "Stakeholder"
 difficulty: 3
 correctAnswer: "C"
 slug: "2026-06-07-regulatory-stakeholder-power-shift"
----
 ---
 
 # The Scenario
