@@ -1,0 +1,19 @@
+---
+import { getCollection, render } from 'astro:content';
+import PmpQuestionLayout from '../../layouts/PmpQuestionLayout.astro';
+
+export async function getStaticPaths() {
+  const questions = await getCollection('pmp-questions');
+  return questions.map((entry) => ({
+    params: { slug: entry.slug || entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<PmpQuestionLayout {...entry.data}>
+  <Content />
+</PmpQuestionLayout>

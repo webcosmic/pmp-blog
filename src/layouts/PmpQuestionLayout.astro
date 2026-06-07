@@ -1,0 +1,262 @@
+---
+const { frontmatter } = Astro.props;
+// Fallback in case props are passed flattened or via frontmatter object
+const title = frontmatter?.title || Astro.props.title || "PMP Scenario";
+const topic = frontmatter?.topic || Astro.props.topic || "General";
+const difficulty = frontmatter?.difficulty || Astro.props.difficulty || "3";
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title} | noteskeep.com</title>
+</head>
+<body>
+
+  <nav class="nav-bar">
+    <a href="/" class="back-link">← Back to PMP Dashboard</a>
+    <span class="site-brand">NotesKeep <strong>PMP</strong></span>
+  </nav>
+
+  <main class="question-container">
+    
+    <header class="question-header">
+      <div class="meta-badges">
+        <span class="badge topic-badge">📂 {topic}</span>
+        <span class="badge diff-badge">⚡ Difficulty: {difficulty}/5</span>
+      </div>
+      <h1>{title}</h1>
+    </header>
+
+    <article class="question-body-card">
+      <slot />
+    </article>
+
+    <section class="reveal-wrapper">
+      <button id="reveal-btn" class="reveal-button">
+        👁️ Reveal Correct Answer & Explanation
+      </button>
+      
+      <div id="explanation-box" class="explanation-box hidden">
+        <div class="explanation-header">
+          <h3>Target Solution & Alignment Matrix</h3>
+        </div>
+        <div class="explanation-content">
+          <p>Review the bottom section of the scenario text above to verify your selected option against the logic breakdown.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    const revealBtn = document.getElementById('reveal-btn');
+    const explanationBox = document.getElementById('explanation-box');
+
+    if (revealBtn && explanationBox) {
+      revealBtn.addEventListener('click', () => {
+        explanationBox.classList.toggle('hidden');
+        if (explanationBox.classList.contains('hidden')) {
+          revealBtn.innerHTML = '👁️ Reveal Correct Answer & Explanation';
+          revealBtn.classList.remove('active');
+        } else {
+          revealBtn.innerHTML = '🙈 Hide Explanation';
+          revealBtn.classList.add('active');
+          explanationBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
+
+<style>
+  :root {
+    --bg-main: #f8fafc;
+    --border-color: #e2e8f0;
+    --text-dark: #1e293b;
+    --text-muted: #64748b;
+    --accent-blue: #2563eb;
+    --card-bg: #ffffff;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-dark);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+  }
+
+  .nav-bar {
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .back-link {
+    color: var(--accent-blue);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+  }
+
+  .site-brand {
+    font-size: 0.95rem;
+    color: var(--text-dark);
+  }
+
+  .question-container {
+    max-width: 800px;
+    margin: 2rem auto 5rem;
+    padding: 0 1.5rem;
+  }
+
+  .meta-badges {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .badge {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    font-weight: 600;
+  }
+
+  .topic-badge {
+    background: #e0f2fe;
+    color: #0369a1;
+  }
+
+  .diff-badge {
+    background: #fef3c7;
+    color: #b45309;
+  }
+
+  .question-header h1 {
+    font-size: 2rem;
+    margin: 0;
+    letter-spacing: -0.03em;
+    line-height: 1.3;
+  }
+
+  .question-body-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+    margin-top: 1rem;
+  }
+
+  .question-body-card :global(p) {
+    font-size: 1.1rem;
+    color: #334155;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Formats bullet markdown options into distinct quiz option blocks */
+  .question-body-card :global(ul) {
+    list-style-type: none;
+    padding: 0;
+    margin: 2rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .question-body-card :global(li) {
+    background: #f8fafc;
+    border: 1px solid var(--border-color);
+    padding: 1rem 1.25rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .question-body-card :global(li:hover) {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    transform: translateX(2px);
+  }
+
+  .reveal-wrapper {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .reveal-button {
+    background: var(--text-dark);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  .reveal-button:hover {
+    background: var(--accent-blue);
+    transform: translateY(-1px);
+  }
+
+  .reveal-button.active {
+    background: var(--text-muted);
+  }
+
+  .explanation-box {
+    width: 100%;
+    background: #f0fdf4;
+    border: 2px solid #bbf7d0;
+    border-radius: 16px;
+    overflow: hidden;
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .explanation-header {
+    background: #dcfce7;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #bbf7d0;
+  }
+
+  .explanation-header h3 {
+    margin: 0;
+    color: #166534;
+    font-size: 1.1rem;
+  }
+
+  .explanation-content {
+    padding: 1.5rem;
+    color: #14532d;
+    font-size: 1.05rem;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>

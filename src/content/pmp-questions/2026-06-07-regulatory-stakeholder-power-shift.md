@@ -1,5 +1,5 @@
 ---
-layout: ../../layouts/PmpQuestionLayout.astro
+
 title: "Situational PMP Question: Managing Emerging Regulatory Stakeholder Power Shifts"
 pubDate: 2026-06-07
 topic: "Stakeholder Engagement"

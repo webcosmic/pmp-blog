@@ -1,7 +1,20 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getCollection } from 'astro:content';
 
+// 1. Fetch your PMP questions content collection
 const allQuestions = await getCollection('pmp-questions');
+
+// 2. Sort safely so files missing a date don't break the build
+const sortedQuestions = allQuestions ? allQuestions.sort((a, b) => {
+  const dateB = b.data && b.data.pubDate ? b.data.pubDate.valueOf() : 0;
+  const dateA = a.data && a.data.pubDate ? a.data.pubDate.valueOf() : 0;
+  return dateB - dateA;
+}) : [];
+
+// 3. Define the chunks for our Bento layout slots
+const latestQuestion = sortedQuestions.length > 0 ? sortedQuestions[0] : null;
+const secondaryQuestions = sortedQuestions.length > 1 ? sortedQuestions.slice(1, 4) : [];
+const totalQuestions = allQuestions ? allQuestions.length : 0;
 ---
 
 <!DOCTYPE html>
@@ -9,50 +22,264 @@ const allQuestions = await getCollection('pmp-questions');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PMP Mastery Blog</title>
+    <title>noteskeep.com | PMP Knowledge Base</title>
 </head>
-<body style="font-family: system-ui, sans-serif; background: #f4f7f6; margin: 0; padding: 40px;">
+<body>
 
-  <div style="max-width: 800px; margin: 0 auto;">
-    <header style="text-align: center; margin-bottom: 5px;">
-      <h1 style="color: #0077b6; font-size: 2.5rem; margin-bottom: 5px;">📚 PMP Mastery Blog</h1>
-      <p style="color: #666; font-style: italic;">Practical, Humorous, and Agent-Ready Project Management Training</p>
-      <hr style="border: 0; height: 2px; background: #0077b6; margin: 30px 0;" />
-    </header>
-<nav style="text-align: center; margin-bottom: 30px;">
-        <a href="/" style="margin-right: 20px; color: #0077b6; text-decoration: none; font-weight: bold; border-bottom: 2px solid #0077b6;">🏠 Home</a>
-        <a href="/about" style="margin-right: 20px; color: #0077b6; text-decoration: none; font-weight: bold;">📖 About</a>
-        <a href="/contact" style="color: #0077b6; text-decoration: none; font-weight: bold;">📬 Contact</a>
-    </nav>
-    <main>
-      <h2 style="margin-bottom: 30px; color: #444;">Latest Practice Questions</h2>
+  <header class="main-header">
+    <h1>NotesKeep <span class="accent">PMP</span></h1>
+    <p>High-difficulty situational alignment scenarios engine</p>
+  </header>
 
-      {allQuestions.map(async (item) => {
-        const { Content } = await render(item);
-        return (
-          <article style="background: white; padding: 30px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-left: 5px solid #0077b6;">
-            <header style="margin-bottom: 20px;">
-              <span style="background: #0077b6; color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase;">
-                {item.data.category}
-              </span>
-              <span style="margin-left: 15px; color: #888; font-size: 0.9rem;">
-                Difficulty: {item.data.difficulty}/5
-              </span>
-              <h3 style="margin-top: 15px; font-size: 1.8rem; color: #222;">{item.data.title}</h3>
-            </header>
-            
-            <div class="pmp-content" style="color: #4a5568; line-height: 1.6;">
-              <Content />
-            </div>
-          </article>
-        );
-      })}
-    </main>
+  <main class="bento-container">
+    
+    {latestQuestion ? (
+      <section class="bento-card hero-tile">
+        <div>
+          <span class="badge">Latest Challenge</span>
+          <h2>{latestQuestion.data.title}</h2>
+          <p class="snippet">Topic: <strong>{latestQuestion.data.topic}</strong> | Difficulty: <strong>{latestQuestion.data.difficulty}</strong></p>
+        </div>
+        <a href={`/pmp-questions/${latestQuestion.slug || latestQuestion.id}/`} class="btn">Attempt Question →</a>
+      </section>
+    ) : (
+      <section class="bento-card hero-tile">
+        <div>
+          <span class="badge">System Operational</span>
+          <h2>Ready for Content</h2>
+          <p class="snippet">No questions found yet in your collection folder.</p>
+        </div>
+      </section>
+    )}
 
-    <footer style="text-align: center; margin-top: 50px; color: #888; font-size: 0.9rem;">
-      <p>© 2026 Noteskeep.com | Built with Astro & AI-Ready Logic</p>
-    </footer>
-  </div>
+    <section class="bento-card stats-tile">
+      <h3>Database Size</h3>
+      <div class="stat-number">{totalQuestions}</div>
+      <p>Verified Scenarios Live</p>
+    </section>
+
+    <section class="bento-card domains-tile">
+      <h3>Core Focus Areas</h3>
+      <ul class="domain-list">
+        <li>
+          <strong>💼 People</strong>
+          <span>Stakeholder Engagement, Team Dynamics</span>
+        </li>
+        <li>
+          <strong>⚙️ Process</strong>
+          <span>Agile, Scope, Risk Management</span>
+        </li>
+        <li>
+          <strong>🏢 Business</strong>
+          <span>Organizational Governance, Compliance</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="bento-card feed-tile">
+      <h3>Recent Matrix Updates</h3>
+      <div class="feed-links">
+        {secondaryQuestions.length > 0 ? (
+          secondaryQuestions.map((q) => (
+            <a href={`/pmp-questions/${q.slug || q.id}/`} class="feed-item">
+              <span class="feed-title">{q.data.title}</span>
+              <span class="feed-topic">{q.data.topic}</span>
+            </a>
+          ))
+        ) : (
+          <p class="empty-text">Additional data streams will populate here automatically.</p>
+        )}
+      </div>
+    </section>
+
+  </main>
 
 </body>
 </html>
+
+<style>
+  :root {
+    --bg-main: #f8fafc;
+    --border-color: #e2e8f0;
+    --text-dark: #1e293b;
+    --text-muted: #64748b;
+    --accent-blue: #2563eb;
+    --card-bg: #ffffff;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-dark);
+    margin: 0;
+    padding: 0;
+  }
+
+  .main-header {
+    text-align: center;
+    padding: 3rem 1rem 1.5rem;
+  }
+
+  .main-header h1 {
+    font-size: 2.5rem;
+    margin: 0 0 0.5rem;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+  }
+
+  .main-header .accent {
+    color: var(--accent-blue);
+  }
+
+  .main-header p {
+    color: var(--text-muted);
+    margin: 0;
+    font-size: 1.1rem;
+  }
+
+  .bento-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-auto-rows: minmax(160px, auto);
+    gap: 1.25rem;
+    padding: 1.5rem;
+    max-width: 1100px;
+    margin: 0 auto 4rem;
+  }
+
+  .bento-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 1.75rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .bento-card h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .bento-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.05);
+  }
+
+  @media (min-width: 768px) {
+    .bento-container {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .hero-tile {
+      grid-column: span 2;
+      grid-row: span 2;
+      background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+    }
+    .domains-tile {
+      grid-row: span 2;
+    }
+    .feed-tile {
+      grid-column: span 2;
+    }
+  }
+
+  .badge {
+    background: var(--accent-blue);
+    color: white;
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: inline-block;
+    margin-bottom: 1.25rem;
+  }
+
+  .hero-tile h2 {
+    margin: 0 0 1rem 0;
+    font-size: 1.75rem;
+    line-height: 1.25;
+  }
+
+  .btn {
+    background: var(--text-dark);
+    color: white;
+    text-decoration: none;
+    padding: 0.75rem 1.25rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    align-self: flex-start;
+    margin-top: 1.5rem;
+  }
+
+  .stat-number {
+    font-size: 4rem;
+    font-weight: 800;
+    margin: 0.5rem 0;
+    line-height: 1;
+  }
+
+  .domain-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .domain-list li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .feed-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+  }
+
+  .feed-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--text-dark);
+    border: 1px solid transparent;
+  }
+
+  .feed-item:hover {
+    background: var(--bg-main);
+    border-color: var(--border-color);
+  }
+
+  .feed-title {
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 70%;
+  }
+
+  .feed-topic {
+    font-size: 0.75rem;
+    background: #e2e8f0;
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+    color: var(--text-muted);
+  }
+
+  .empty-text {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-style: italic;
+  }
+</style>
