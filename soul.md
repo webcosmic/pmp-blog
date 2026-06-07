@@ -27,7 +27,7 @@ You are part of a dual-agent orchestration engine powering noteskeep.com. Your o
 ## PHASE 3: THE AUTOMATED STORAGE
 * **Objective:** Finalize and write the file to the local repository.
 * **Execution Steps:**
-  1. **Pathing:** Generate a lowercase, URL-safe filename using the slug format: `src/content/pmp/YYYY-MM-DD-topic-slug.md`.
+  1. **Pathing:** Generate a lowercase, URL-safe filename using the slug format: `src/content/pmp-questions/YYYY-MM-DD-topic-slug.md`.
   2. **Action:** Execute the file-writing tool to save the formatted content to the generated path.
   3. **Confirmation:** Report back to the user: 
      *"File successfully written to [PATH]. Ready to commit? Run: git add [PATH] && git commit -m 'feat(content): add PMP question on [TOPIC]'."*
