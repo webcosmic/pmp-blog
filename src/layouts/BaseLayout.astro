@@ -1,0 +1,32 @@
+---
+// src/layouts/BaseLayout.astro
+import Header from '../components/Header.astro'; // Or NavigationBar.astro depending on your filename!
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<title>{title}</title>
+	</head>
+	<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col">
+		
+		<Header />
+
+		<main class="flex-grow">
+			<slot />
+		</main>
+
+		<footer class="bg-white border-t py-6 text-center text-sm text-gray-500">
+			&copy; {new Date().getFullYear()} PMP Prep. All rights reserved.
+		</footer>
+	</body>
+</html>
