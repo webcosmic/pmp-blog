@@ -1,22 +1,22 @@
 ---
 import { getCollection } from 'astro:content';
+import Header from '../components/Header.astro';
 
-// 1. Fetch your PMP questions content collection
+// 1. Fetch your automated content collection
 const allQuestions = await getCollection('pmp-questions');
 
-// 2. Sort safely so files missing a date don't break the build
+// 2. Sort safely so files missing a date don't break the layout
 const sortedQuestions = allQuestions ? allQuestions.sort((a, b) => {
   const dateB = b.data && b.data.pubDate ? b.data.pubDate.valueOf() : 0;
   const dateA = a.data && a.data.pubDate ? a.data.pubDate.valueOf() : 0;
   return dateB - dateA;
 }) : [];
 
-// 3. Define the chunks for our Bento layout slots
+// 3. Define the chunks for our Bento layout slots (Showing 5 secondary posts)
 const latestQuestion = sortedQuestions.length > 0 ? sortedQuestions[0] : null;
 const secondaryQuestions = sortedQuestions.length > 1 ? sortedQuestions.slice(1, 6) : [];
 const totalQuestions = allQuestions ? allQuestions.length : 0;
 ---
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,13 +26,13 @@ const totalQuestions = allQuestions ? allQuestions.length : 0;
 </head>
 <body>
 
-  <header class="main-header">
-    <h1>NotesKeep <span class="accent">PMP</span></h1>
-    <p>High-difficulty situational alignment scenarios engine</p>
+    <Header />
+
+    <main class="bento-container">
+  
   </header>
 
-  <main class="bento-container">
-    
+  
     {latestQuestion ? (
       <section class="bento-card hero-tile">
         <div>

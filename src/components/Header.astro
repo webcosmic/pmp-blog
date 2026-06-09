@@ -1,0 +1,70 @@
+
+// src/components/Header.astro
+---
+<nav class="site-navigation">
+  <div class="nav-wrapper">
+    <div class="nav-brand">
+      <a href="/">🎯 NotesKeep <span>PMP</span></a>
+    </div>
+    
+    <div class="nav-links">
+      <a href="/" class="nav-item active">Home</a>
+      <a href="/about" class="nav-item">About</a>
+      <a href="/contact" class="nav-item">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<style>
+  /* Navigation Container */
+  .site-navigation {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    padding: 0.75rem 2rem;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+
+  /* Structural Alignment Wrapper */
+  .nav-wrapper {
+    max-w: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Brand Styling */
+  .nav-brand a {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #1e293b;
+    text-decoration: none;
+    letter-spacing: -0.025em;
+  }
+  .nav-brand span {
+    color: #2563eb; /* Matches your accent blue */
+  }
+
+  /* Links Layout */
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  /* Individual Menu Items */
+  .nav-item {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #64748b;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .nav-item:hover {
+    color: #2563eb;
+  }
+  .nav-item.active {
+    color: #1e293b;
+    font-weight: 600;
+  }
+</style>
