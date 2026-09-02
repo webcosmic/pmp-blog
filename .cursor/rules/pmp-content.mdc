@@ -1,0 +1,29 @@
+---
+description: Conventions for PMP question content in this Astro blog
+globs:
+  - src/content/pmp-questions/**
+  - pmp_questions_pack.md
+alwaysApply: false
+---
+
+# PMP Blog Content Rules
+
+## Site context
+
+This is **noteskeep.com** — a PMP exam practice site built with Astro. Content lives in `src/content/pmp-questions/`.
+
+## Tone and quality
+
+- Professional, educational, exam-realistic
+- Situational scenarios that require judgment, not trivia recall
+- Explanations should reference PMI thinking (stakeholder engagement, change control, risk response, etc.)
+
+## Format
+
+- Use the canonical post at `src/content/pmp-questions/2026-06-07-regulatory-stakeholder-power-shift.md` as the template
+- Options use markdown bullet list with bold labels: `* **A)** ...`
+- Never leave `token-handoff` blocks in published content
+
+## Verification
+
+After any content change, run `npm run build` before committing.
