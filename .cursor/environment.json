@@ -1,0 +1,18 @@
+{
+  "name": "pmp-blog",
+  "user": "ubuntu",
+  "install": "npm ci",
+  "terminals": [
+    {
+      "name": "astro-dev",
+      "command": "npm run dev -- --host 0.0.0.0 --port 4321",
+      "description": "Astro dev server for previewing PMP questions"
+    }
+  ],
+  "ports": [
+    {
+      "name": "web",
+      "port": 4321
+    }
+  ]
+}
